@@ -1,1 +1,1 @@
-Flask-RESTful
+Flask-JWT-Extended
