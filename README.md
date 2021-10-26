@@ -1,1 +1,1 @@
-Flask-JWT-Extended
+Flask-Advanced

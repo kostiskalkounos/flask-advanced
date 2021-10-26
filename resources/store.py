@@ -22,8 +22,9 @@ class Store(Resource):
                          help=BLANK_ERROR.format("store_id")
     )
 
+    @classmethod
     @jwt_required()
-    def get(self, name: str):
+    def get(cls, name: str):
         store = StoreModel.find_by_name(name)
         if store:
             return store.json()
@@ -43,8 +44,9 @@ class Store(Resource):
 
         return store.json(), 201
 
+    @classmethod
     @jwt_required()
-    def delete(self, name: str):
+    def delete(cls, name: str):
         store = StoreModel.find_by_name(name)
         if store:
             store.delete_from_db()
@@ -53,6 +55,7 @@ class Store(Resource):
 
 
 class StoreList(Resource):
-    def get(self):
+    @classmethod
+    def get(cls):
         # return {'stores': list(map(lambda x: x.json(), StoreModel.find_all()))}
         return {'stores': [store.json() for store in StoreModel.find_all()]}

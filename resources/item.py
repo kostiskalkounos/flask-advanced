@@ -24,16 +24,18 @@ class Item(Resource):
                          help=BLANK_ERROR.format("store_id")
     )
 
+    @classmethod
     @jwt_required()
-    def get(self, name: str):
+    def get(cls, name: str):
         item = ItemModel.find_by_name(name)
         if item:
             return item.json()
         return {'message': ITEM_NOT_FOUND}, 404
 
 
+    @classmethod
     @jwt_required(fresh=True)
-    def post(self, name: str):
+    def post(cls, name: str):
         if ItemModel.find_by_name(name):
             return {'message': NAME_ALREADY_EXISTS.format(name)}, 400
 
@@ -47,8 +49,9 @@ class Item(Resource):
 
         return item.json(), 201
 
+    @classmethod
     @jwt_required()
-    def delete(self, name: str):
+    def delete(cls, name: str):
         claims = get_jwt()
         if not claims['is_admin']:
             return {'message': ADMIN_PRIVILEGES_REQUIRED}
@@ -60,8 +63,9 @@ class Item(Resource):
 
         return {'message': ITEM_NOT_FOUND}, 404
 
+    @classmethod
     @jwt_required()
-    def put(self, name: str):
+    def put(cls, name: str):
         data = Item.parser.parse_args()
         item = ItemModel.find_by_name(name)
 
@@ -76,8 +80,9 @@ class Item(Resource):
 
 
 class ItemList(Resource):
+    @classmethod
     @jwt_required(optional=True)
-    def get(self):
+    def get(cls):
         user_id = get_jwt_identity()
         items = [item.json() for item in ItemModel.find_all()]
         if user_id:
