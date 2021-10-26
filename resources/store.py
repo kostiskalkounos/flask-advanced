@@ -18,14 +18,14 @@ class Store(Resource):
     )
 
     @jwt_required()
-    def get(self, name):
+    def get(self, name: str):
         store = StoreModel.find_by_name(name)
         if store:
             return store.json()
         return {'message': 'Store not found'}, 404 # this is a tuple
 
 
-    def post(self, name):
+    def post(self, name: str):
         if StoreModel.find_by_name(name):
             return {'message': "A Store with name '{}' already exists.".format(name)}, 400
 
@@ -39,7 +39,7 @@ class Store(Resource):
         return store.json(), 201
 
     @jwt_required()
-    def delete(self, name):
+    def delete(self, name: str):
         store = StoreModel.find_by_name(name)
         if store:
             store.delete_from_db()
