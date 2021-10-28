@@ -1,7 +1,6 @@
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from flask_restful import Resource
-from marshmallow import ValidationError
 from models.item import ItemModel
 from schemas.item import ItemSchema
 
@@ -34,10 +33,7 @@ class Item(Resource):
         user_json = request.get_json() # price, store_id
         user_json["name"] = name
 
-        try:
-            item = item_schema.load(user_json)
-        except ValidationError as err:
-            return err.messages, 400
+        item = item_schema.load(user_json)
 
         try:
             item.save_to_db()
@@ -70,11 +66,7 @@ class Item(Resource):
             item.price = item_json['price']
         else:
             item_json["name"] = name
-
-            try:
-                item = item_schema.load(item_json)
-            except ValidationError as err:
-                return err.messages, 400
+            item = item_schema.load(item_json)
 
         item.save_to_db()
 
