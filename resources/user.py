@@ -17,6 +17,7 @@ CREATED_SUCCESSFULLY = "User created successfully."
 INVALID_CREDENTIALS = "Invalid credentials."
 NOT_CONFIRMED_ERROR = "You have not confirmed registration, please check your email <{}>."
 USER_ALREADY_EXISTS = "A user with that username already exists."
+USER_CONFIRMED = "User confirmed."
 USER_DELETED = "User deleted."
 USER_LOGGED_OUT = "User <id={}> successfully logged out."
 USER_NOT_FOUND = "User not found."
@@ -89,4 +90,16 @@ class TokenRefresh(Resource):
     def post(cls):
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
-        return {'access_token': new_token}, 200 # 200 is the default return value
+        return {'access_token': new_token}, 200
+
+class UserConfirm(Resource):
+    @classmethod
+    def get(cls, user_id: int):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": USER_NOT_FOUND}, 404
+
+        user.activated = True
+        user.save_to_db()
+        return {"message": USER_CONFIRMED}, 200
+

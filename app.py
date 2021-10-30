@@ -6,7 +6,14 @@ from marshmallow import ValidationError
 from ma import ma
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
-from resources.user import UserRegister, User, UserLogin, UserLogout, TokenRefresh
+from resources.user import (
+        TokenRefresh,
+        User,
+        UserConfirm,
+        UserLogin,
+        UserLogout,
+        UserRegister,
+)
 from blocklist import BLOCKLIST
 
 app = Flask(__name__)
@@ -72,14 +79,15 @@ def revoked_token_callback():
     }), 401
 
 api.add_resource(Item, '/item/<string:name>')
-api.add_resource(Store, '/store/<string:name>')
-api.add_resource(User, '/user/<int:user_id>')
 api.add_resource(ItemList, '/items')
+api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
-api.add_resource(UserRegister, '/register')
+api.add_resource(TokenRefresh, '/refresh')
+api.add_resource(User, '/user/<int:user_id>')
+api.add_resource(UserConfirm, '/user_confirm/<int:user_id>')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
-api.add_resource(TokenRefresh, '/refresh')
+api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
     from db import db
