@@ -6,4 +6,4 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = UserModel
         load_only = ("password",) # it's a tuple
-        dump_only = ("id",) # not required in this scenario
+        dump_only = ("id", "activated") # not required in this scenario

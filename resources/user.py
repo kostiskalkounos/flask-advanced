@@ -15,6 +15,7 @@ from schemas.user import UserSchema
 
 CREATED_SUCCESSFULLY = "User created successfully."
 INVALID_CREDENTIALS = "Invalid credentials."
+NOT_CONFIRMED_ERROR = "You have not confirmed registration, please check your email <{}>."
 USER_ALREADY_EXISTS = "A user with that username already exists."
 USER_DELETED = "User deleted."
 USER_LOGGED_OUT = "User <id={}> successfully logged out."
@@ -58,15 +59,15 @@ class UserLogin(Resource):
         user_data = user_schema.load(request.get_json())
         user = UserModel.find_by_username(user_data.username)
 
-        # this is what the `authenticate()` function used to do
         if user and user.password == user_data.password:
-            # identity= is what the `identity()` used to do
-           access_token = create_access_token(identity=user.id, fresh=True)
-           refresh_token = create_refresh_token(user.id)
-           return {
-               'access_token': access_token,
-               'refresh_token': refresh_token
-           }, 200
+            if user.activated:
+               access_token = create_access_token(identity=user.id, fresh=True)
+               refresh_token = create_refresh_token(user.id)
+               return {
+                   'access_token': access_token,
+                   'refresh_token': refresh_token
+               }, 200
+            return {"message": NOT_CONFIRMED_ERROR.format(user.email)}, 400
 
         return {'message': INVALID_CREDENTIALS}, 401
 
