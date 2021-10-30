@@ -10,6 +10,7 @@ from flask_jwt_extended import (
 )
 
 from blocklist import BLOCKLIST
+from libs.mailgun import MailgunException
 from models.user import UserModel
 from schemas.user import UserSchema
 
@@ -42,6 +43,9 @@ class UserRegister(Resource):
             user.save_to_db()
             user.send_confirmartion_email()
             return {"message": SUCCESS_REGISTER_MESSAGE}, 201
+        except MailgunException as e:
+            user.delete_from_db()
+            return {"message": str(e)}, 500
         except:
             traceback.print_exc()
             return {"message": FAILED_TO_CREATE}, 500
