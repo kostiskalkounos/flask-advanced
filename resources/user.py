@@ -1,3 +1,4 @@
+import traceback
 from flask import request, make_response, render_template
 from flask_restful import Resource
 from flask_jwt_extended import (
@@ -13,9 +14,11 @@ from models.user import UserModel
 from schemas.user import UserSchema
 
 
-CREATED_SUCCESSFULLY = "User created successfully."
+EMAIL_ALREADY_EXISTS = "A user with that email already exists."
+FAILED_TO_CREATE = "Internal server error. Failed to create user."
 INVALID_CREDENTIALS = "Invalid credentials."
 NOT_CONFIRMED_ERROR = "You have not confirmed registration, please check your email <{}>."
+SUCCESS_REGISTER_MESSAGE = "Account created successfully, an email with an activation link has been sent to your email address, please check."
 USER_ALREADY_EXISTS = "A user with that username already exists."
 USER_CONFIRMED = "User confirmed."
 USER_DELETED = "User deleted."
@@ -32,9 +35,16 @@ class UserRegister(Resource):
         if UserModel.find_by_username(user.username):
             return {"message": USER_ALREADY_EXISTS}, 400
 
-        user.save_to_db()
+        if UserModel.find_by_email(user.email):
+            return {"message": EMAIL_ALREADY_EXISTS}, 400
 
-        return {"message": CREATED_SUCCESSFULLY}, 201
+        try:
+            user.save_to_db()
+            user.send_confimartion_email()
+            return {"message": SUCCESS_REGISTER_MESSAGE}, 201
+        except:
+            traceback.print_exc()
+            return {"message": FAILED_TO_CREATE}, 500
 
 
 class User(Resource):
@@ -57,7 +67,7 @@ class User(Resource):
 class UserLogin(Resource):
     @classmethod
     def post(cls):
-        user_data = user_schema.load(request.get_json())
+        user_data = user_schema.load(request.get_json(), partial=("email",))
         user = UserModel.find_by_username(user_data.username)
 
         if user and user.password == user_data.password:
