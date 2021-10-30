@@ -40,7 +40,7 @@ class UserRegister(Resource):
 
         try:
             user.save_to_db()
-            user.send_confimartion_email()
+            user.send_confirmartion_email()
             return {"message": SUCCESS_REGISTER_MESSAGE}, 201
         except:
             traceback.print_exc()
