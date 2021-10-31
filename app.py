@@ -4,12 +4,13 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
 
+from blocklist import BLOCKLIST
+from db import db
 from ma import ma
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import TokenRefresh, User, UserLogin, UserLogout, UserRegister
-from blocklist import BLOCKLIST
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
@@ -86,7 +87,6 @@ api.add_resource(UserLogout, '/logout')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
-    from db import db
     db.init_app(app)
     ma.init_app(app)
     app.run(port=5000, debug=True)
