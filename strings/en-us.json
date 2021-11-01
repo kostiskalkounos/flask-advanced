@@ -29,5 +29,8 @@
   "user_not_confirmed": "You have not confirmed registration, please check your email <{}>.",
   "user_not_found": "User not found.",
   "user_registered": "Account created successfully, an email with an activation link has been sent to your email address, please check.",
-  "user_username_exists": "A user with that username already exists."
+  "user_username_exists": "A user with that username already exists.",
+
+  "image_uploaded": "Image '{}' uploaded.",
+  "image_illegal_extension": "Extension '{}' is not allowed."
 }
