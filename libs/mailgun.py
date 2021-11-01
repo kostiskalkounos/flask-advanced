@@ -11,10 +11,10 @@ class MailgunException(Exception):
 
 
 class Mailgun:
-    MAILGUN_DOMAIN = os.environ.get("MAILGUN_DOMAIN", None)
-    MAILGUN_API_KEY = os.environ.get("MAILGUN_API_KEY", None)
-    FROM_TITLE = os.environ.get("FROM_TITLE", None)
     FROM_EMAIL = os.environ.get("FROM_EMAIL", None)
+    FROM_TITLE="Stores REST API"
+    MAILGUN_API_KEY = os.environ.get("MAILGUN_API_KEY", None)
+    MAILGUN_DOMAIN = os.environ.get("MAILGUN_DOMAIN", None)
 
     @classmethod
     def send_email(cls, email: List[str], subject: str, text: str, html: str) -> Response:

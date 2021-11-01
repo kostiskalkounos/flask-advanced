@@ -1,8 +1,8 @@
-import os
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from marshmallow import ValidationError
+from dotenv import load_dotenv
 
 from blocklist import BLOCKLIST
 from db import db
@@ -13,10 +13,9 @@ from resources.store import Store, StoreList
 from resources.user import TokenRefresh, User, UserLogin, UserLogout, UserRegister
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PROPAGATE_EXCEPTIONS'] = True
-app.secret_key = os.environ.get("SECRET_KEY")
+load_dotenv(".env", verbose=True)
+app.config.from_object("default_config")
+app.config.envvar("APPLICATION_SETTINGS")
 api = Api(app)
 
 @app.before_first_request
