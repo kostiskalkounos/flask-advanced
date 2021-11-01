@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from flask_uploads import configure_uploads, patch_request_class
 from marshmallow import ValidationError
 from dotenv import load_dotenv
 
@@ -11,11 +12,15 @@ from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import TokenRefresh, User, UserLogin, UserLogout, UserRegister
+from resources.image import ImageUpload
+from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
 load_dotenv(".env", verbose=True)
 app.config.from_object("default_config")
 app.config.envvar("APPLICATION_SETTINGS")
+patch_request_class(app, 10 * 1024 * 1024) # 10MB max size upload
+configure_uploads(app, IMAGE_SET)
 api = Api(app)
 
 @app.before_first_request
@@ -75,6 +80,7 @@ def revoked_token_callback():
 
 api.add_resource(Confirmation, '/user_confirmation/<string:confirmation_id>')
 api.add_resource(ConfirmationByUser, '/confirmation/user/<int:user_id>')
+api.add_resource(ImageUpload, '/upload/image')
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(Store, '/store/<string:name>')
@@ -88,4 +94,4 @@ api.add_resource(UserRegister, '/register')
 if __name__ == '__main__':
     db.init_app(app)
     ma.init_app(app)
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
