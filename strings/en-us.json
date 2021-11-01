@@ -31,6 +31,10 @@
   "user_registered": "Account created successfully, an email with an activation link has been sent to your email address, please check.",
   "user_username_exists": "A user with that username already exists.",
 
-  "image_uploaded": "Image '{}' uploaded.",
-  "image_illegal_extension": "Extension '{}' is not allowed."
+  "image_delete": "Image '{}' deleted.",
+  "image_delete_failed": "Internal server error! Failed to delete image.",
+  "image_illegal_extension": "Extension '{}' is not allowed.",
+  "image_illegal_file_name": "Illegal filename '{}' requested.",
+  "image_not_found": "Image '{}' not found.",
+  "image_uploaded": "Image '{}' uploaded."
 }
