@@ -12,7 +12,7 @@ from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import TokenRefresh, User, UserLogin, UserLogout, UserRegister
-from resources.image import ImageUpload, Image
+from resources.image import ImageUpload, Image, AvatarUpload
 from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
@@ -78,6 +78,7 @@ def revoked_token_callback():
         'error': 'token_revoked'
     }), 401
 
+api.add_resource(AvatarUpload, '/upload/avatar')
 api.add_resource(Confirmation, '/user_confirmation/<string:confirmation_id>')
 api.add_resource(ConfirmationByUser, '/confirmation/user/<int:user_id>')
 api.add_resource(Image, '/image/<string:filename>')
